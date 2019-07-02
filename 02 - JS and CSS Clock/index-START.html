@@ -86,6 +86,8 @@
       const minutesDegrees = ((minutes / 60) * 360) + 90;
       const secondsDegrees = ((seconds / 60) * 360) + 90;
 
+      secondHand.style['transition-property'] = secondsDegrees === 90 ? 'none' : 'all';
+
       hourHand.style.transform = `rotate(${hourDegrees}deg)`;
       minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
       secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
