@@ -6,6 +6,7 @@
 </head>
 <body>
   <p><em>Psst: have a look at the JavaScript Console</em> 💁</p>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
   <script>
     // Get your shorts on - this is an array workout!
     // ## Array Cardio Day 1
@@ -31,28 +32,49 @@
 
     // Array.prototype.filter()
     // 1. Filter the list of inventors for those who were born in the 1500's
+    const bornIn1500s = inventors.filter((inventor) => inventor.year >= 1500 && inventor.year < 1600);
 
     // Array.prototype.map()
     // 2. Give us an array of the inventors' first and last names
+    const firstAndLastNames = inventors.map((inventor) => `${inventor.first} ${inventor.last}`);
 
     // Array.prototype.sort()
     // 3. Sort the inventors by birthdate, oldest to youngest
+    const sortedByBirthdate = inventors.sort((a, b) => a.year < b.year ? -1 : 1);
 
     // Array.prototype.reduce()
     // 4. How many years did all the inventors live?
+    const totalYearsLived = inventors.reduce((sum, inventor) => sum + (inventor.passed - inventor.year), 0);
 
     // 5. Sort the inventors by years lived
+    const sortedByYearsLived = inventors.sort((a, b) => {
+      const ageA = a.passed - a.year;
+      const ageB = b.passed - b.year;
+      return ageA < ageB ? -1 : 1;
+    });
 
     // 6. create a list of Boulevards in Paris that contain 'de' anywhere in the name
     // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
-
+    // const div = document.querySelector('.mw-category');
+    // const a = div.querySelectorAll('a');
+    // const text = Array.from(a).map((link) => link.textContent);
+    // const de = text.filter((str) => str.includes('de'));
 
     // 7. sort Exercise
     // Sort the people alphabetically by last name
+    const sortedByLastName = people.sort((a, b) => {
+      const lastA = a.split(', ')[0];
+      const lastB = b.split(', ')[0];
+      return lastA.localeCompare(lastB);
+    });
 
     // 8. Reduce Exercise
     // Sum up the instances of each of these
     const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck' ];
+    const count = data.reduce((obj, str) => {
+      obj[str] = (obj[str] || 0) + 1;
+      return obj;
+    }, {});
 
   </script>
 </body>
