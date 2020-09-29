@@ -15,50 +15,35 @@
     </ul>
   </form>
 <script>
+  const ENDPOINT = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  const places = [];
+  const searchInput = document.querySelector('.search');
+  const suggestionsUl = document.querySelector('.suggestions');
 
-class Places {
-  ENDPOINT = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
-  places = [];
-  searchInput = document.querySelector('.search');
-  suggestionsUl = document.querySelector('.suggestions');
-
-  constructor() {
-    this.init();
+  function init() {
+    getPlaces();
+    setUpEventListeners();
   }
 
-  init() {
-    this.getPlaces()
-      .then(res => {
-        console.log('Got places:', res);
-        this.places = res;
-      })
-      .catch(err => console.error(err));
-
-    this.searchInput.addEventListener('keyup', (e) => {
-      this.filterPlaces(e.target.value);
+  function setUpEventListeners() {
+    searchInput.addEventListener('keyup', (e) => {
+      filterPlaces(e.target.value);
     });
   }
 
-  getPlaces() {
-    return fetch(this.ENDPOINT)
+  function getPlaces() {
+    return fetch(ENDPOINT)
       .then(res => res.blob())
       .then(blob => blob.text())
-      .then(text => JSON.parse(text));  
+      .then(text => {
+        const parsedPlaces = JSON.parse(text);
+        console.log('Got places:', parsedPlaces);
+        places.push(...parsedPlaces);
+      })
+      .catch(err => console.error(err));
   }
 
-  filterPlaces(query) {
-    const regex = new RegExp(query, 'gi');
-
-    const filteredPlaces = this.places.filter(place => {
-      return place.city.match(regex) || place.state.match(regex);
-    });
-
-    console.log('Filtered places:', filteredPlaces);
-    
-    this.displayPlaces(filteredPlaces);
-  };
-
-  displayPlaces(places) {
+  function displayPlaces(places) {
     const formattedPlaces = places.map(place => {
       return `
         <li>
@@ -67,52 +52,22 @@ class Places {
         </li>
       `;
     }).join('');
-    this.suggestionsUl.innerHTML = formattedPlaces;
+    suggestionsUl.innerHTML = formattedPlaces;
   }
-}
 
-// const getPlaces = () => {
-//   return fetch(ENDPOINT)
-//     .then(res => res.blob())
-//     .then(blob => blob.text())
-//     .then(text => JSON.parse(text));
-// }
+  function filterPlaces(query) {
+    const regex = new RegExp(query, 'gi');
 
-// const filterPlaces = (query) => {
-//   const regex = new RegExp(query, 'gi');
+    const filteredPlaces = places.filter(place => {
+      return place.city.match(regex) || place.state.match(regex);
+    });
 
-//   const filteredPlaces = places.filter(place => {
-//     return place.city.match(regex) || place.state.match(regex);
-//   });
+    console.log('Filtered places:', filteredPlaces);
+    
+    displayPlaces(filteredPlaces);
+  };
 
-//   displayPlaces(filteredPlaces);
-// };
-
-// const displayPlaces = (places) => {
-//   const formattedPlaces = places.map(place => {
-//     return `
-//       <li>
-//         ${place.city}, ${place.state}
-//         <span>${place.population}</span>
-//       </li>
-//     `;
-//   }).join('');
-//   suggestionsUl.innerHTML = formattedPlaces;
-// };
-
-// getPlaces()
-//   .then(res => {
-//     console.log('Got places:', res);
-//     places.push(...res);
-//   })
-//   .catch(err => console.error(err));
-
-// searchInput.addEventListener('keyup', (e) => {
-//   filterPlaces(e.target.value);
-// });
-
-new Places();
-
+  init();
 </script>
 </body>
 </html>
