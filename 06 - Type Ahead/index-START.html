@@ -43,12 +43,28 @@
       .catch(err => console.error(err));
   }
 
-  function displayPlaces(places) {
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  function displayPlaces(places, query) {
+
     const formattedPlaces = places.map(place => {
+      const regex = new RegExp(query, 'gi');
+
+      const city = place.city.replace(
+        regex,
+        `<span class='hl'>${query}</span>`
+      );
+      const state = place.state.replace(
+        regex,
+        `<span class='hl'>${query}</span>`
+      );
+
       return `
         <li>
-          ${place.city}, ${place.state}
-          <span>${place.population}</span>
+          <span>${city}, ${state}</span>
+          <span class='population'>${numberWithCommas(place.population)}</span>
         </li>
       `;
     }).join('');
@@ -64,7 +80,7 @@
 
     console.log('Filtered places:', filteredPlaces);
     
-    displayPlaces(filteredPlaces);
+    displayPlaces(filteredPlaces, query);
   };
 
   init();
